@@ -159,13 +159,39 @@ public class Professions extends JavaPlugin{
                             }
                         }
                     }else if(args[0].equalsIgnoreCase("list")){
-
+                        if(args.length==1){
+                            List<String> availableProf = settings.getKeys(player.getWorld().getName() + ".professions");
+                            String compacted = availableProf.toString().substring(1, availableProf.toString().length()-1);
+                            player.sendMessage(ChatColor.GREEN+"Available Professions:");
+                            player.sendMessage(ChatColor.GREEN+compacted);
+                            return true;
+                        }
+                        if(args.length==2){
+                            String prof = args[1];
+                            PermissionGroup[] allGroups = pm.getGroups();
+                            String groupsHasProfession = "";
+                            int counter = 0;
+                            while(counter<allGroups.length){
+                                if(allGroups[counter].getOwnOption("profession").equalsIgnoreCase(prof)){
+                                    groupsHasProfession += allGroups[counter].getName()+", ";
+                                }
+                                counter++;
+                            }
+                            if(groupsHasProfession.isEmpty()){
+                                player.sendMessage(ChatColor.GREEN+"No Groups in profession '"+prof+"'");
+                                return true;
+                            }else{
+                                player.sendMessage(ChatColor.GREEN+"Available Professions:");
+                                player.sendMessage(ChatColor.GREEN+groupsHasProfession.substring(0, groupsHasProfession.length()-2));
+                                return true;
+                            }
+                        }
                     }else if(args[0].equalsIgnoreCase("me")){
 
                     }else if(args[0].equalsIgnoreCase("user")){
 
                     }else if((args[0].equalsIgnoreCase("help"))||(args[0].equalsIgnoreCase("?"))){
-
+                        return false;
                     }else{
                         player.sendMessage(ChatColor.GREEN+"Invalid Parameters!");
                         player.sendMessage(ChatColor.GREEN+"Params: join,leave,list,me,user");
