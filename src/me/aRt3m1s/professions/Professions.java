@@ -186,8 +186,24 @@ public class Professions extends JavaPlugin{
                                 return true;
                             }
                         }
+                        if(args.length>=3){
+                            player.sendMessage(ChatColor.GREEN+"Too many Parameters!");
+                            return true;
+                        }
                     }else if(args[0].equalsIgnoreCase("me")){
-
+                        PermissionGroup[] usersGroups = pm.getUser(player).getGroups(player.getWorld().getName());
+                        int counter = 0;
+                        player.sendMessage((ChatColor.RED+"GROUP")+(ChatColor.WHITE+"<==>")+(ChatColor.RED+"PROFESSION"));
+                        while(counter<usersGroups.length){
+                            String group = usersGroups[counter].getName();
+                            String prof = usersGroups[counter].getOwnOption("profession");
+                            if(prof.isEmpty()){
+                                prof = "NoProfessionS";
+                            }
+                            player.sendMessage((ChatColor.GREEN+group)+(ChatColor.WHITE+"<==>")+(ChatColor.GREEN+prof));
+                            counter++;
+                        }
+                        return true;
                     }else if(args[0].equalsIgnoreCase("user")){
 
                     }else if((args[0].equalsIgnoreCase("help"))||(args[0].equalsIgnoreCase("?"))){
