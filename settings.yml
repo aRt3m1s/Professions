@@ -43,6 +43,6 @@ settings:
   default-leavecost: 0
 ##
 # @enable-iConomy:
-#   enables or disables iConomy plugin
+#   enables or disables iConomy support
 ##
   enable-iConomy: true
