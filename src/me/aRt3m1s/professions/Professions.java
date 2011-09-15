@@ -213,15 +213,107 @@ public class Professions extends JavaPlugin{
                     return true;
                 }else if(args.length>=1&&args.length<=3){
                     if(args[0].equalsIgnoreCase("addProfession")){
-
+                        if(args.length==1){
+                            player.sendMessage(ChatColor.GREEN+"Specify a Profession!");
+                            return true;
+                        }else{
+                            settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".limit",
+                                    settings.getInt("settings.default-limit", 1));
+                            settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".time",
+                                    settings.getInt("settings.default-time", 1));
+                            settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".join-cost",
+                                    settings.getInt("settings.default-joincost", 1));
+                            settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".leave-cost",
+                                    settings.getInt("settings.default-leavecost", 1));
+                            settings.save();
+                            player.sendMessage(ChatColor.GREEN+"Profession added!");
+                            return true;
+                        }
                     }else if(args[0].equalsIgnoreCase("limit")){
-
+                        if(args.length==1||args.length==2){
+                            return this.emptyPSett(player, args);
+                        }else{
+                            try{
+                                int limit = Integer.parseInt(args[2]);
+                                if(settings.getKeys(player.getWorld().getName()+".professions").contains(args[1])){
+                                    settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".limit", limit);
+                                    settings.save();
+                                    player.sendMessage(ChatColor.GREEN+"Limit is changed");
+                                    return true;
+                                }else{
+                                    player.sendMessage(ChatColor.GREEN+"No such Professions");
+                                    return true;
+                                }
+                            }catch(NumberFormatException e){
+                                player.sendMessage(ChatColor.GREEN+"Value is not a Number!");
+                                return true;
+                            }
+                        }
                     }else if(args[0].equalsIgnoreCase("time")){
+                        if(args.length==1||args.length==2){
+                            return this.emptyPSett(player, args);
+                        }else{
+                            try{
+                                int time = Integer.parseInt(args[2]);
+                                if(settings.getKeys(player.getWorld().getName()+".professions").contains(args[1])){
+                                    settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".time", time);
+                                    settings.save();
+                                    player.sendMessage(ChatColor.GREEN+"Time is changed");
+                                    return true;
+                                }else{
+                                    player.sendMessage(ChatColor.GREEN+"No such Professions");
+                                    return true;
+                                }
+                            }catch(NumberFormatException e){
+                                player.sendMessage(ChatColor.GREEN+"Value is not a Number!");
+                                return true;
+                            }
 
+                        }
                     }else if(args[0].equalsIgnoreCase("joincost")){
+                        if(args.length==1||args.length==2){
+                            return this.emptyPSett(player, args);
+                        }else{
+                            try{
+                                double jCost = Double.parseDouble(args[2]);
+                                if(settings.getKeys(player.getWorld().getName()+".professions").contains(args[1])){
+                                    settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".join-cost", jCost);
+                                    settings.save();
+                                    player.sendMessage(ChatColor.GREEN+"Join-cost is changed");
+                                    return true;
+                                }else{
+                                    player.sendMessage(ChatColor.GREEN+"No such Professions");
+                                    return true;
+                                }
+                            }catch(NumberFormatException e){
+                                player.sendMessage(ChatColor.GREEN+"Value is not a Number!");
+                                return true;
+                            }
 
+                        }
                     }else if(args[0].equalsIgnoreCase("leavecost")){
+                        if(args.length==1||args.length==2){
+                            return this.emptyPSett(player, args);
+                        }else{
+                            try{
+                                double lCost = Double.parseDouble(args[2]);
+                                if(settings.getKeys(player.getWorld().getName()+".professions").contains(args[1])){
+                                    settings.setProperty(player.getWorld().getName()+".professions."+args[1]+".leave-cost", lCost);
+                                    settings.save();
+                                    player.sendMessage(ChatColor.GREEN+"Leave-cost is changed");
+                                    return true;
+                                }else{
+                                    player.sendMessage(ChatColor.GREEN+"No such Professions");
+                                    return true;
+                                }
+                            }catch(NumberFormatException e){
+                                player.sendMessage(ChatColor.GREEN+"Value is not a Number!");
+                                return true;
+                            }
 
+                        }
+                    }else if(args[0].equalsIgnoreCase("help")||args[0].equalsIgnoreCase("?")){
+                        return false;
                     }
                 }else{
                     player.sendMessage(ChatColor.GREEN+"Too many Parameters!");
@@ -233,6 +325,16 @@ public class Professions extends JavaPlugin{
             return true;
         }
         return false;
+    }
+
+    private boolean emptyPSett(Player player, String[] args) {
+        if(args.length==1){
+            player.sendMessage(ChatColor.GREEN+"Specify a Profession!");
+            return true;
+        }else{
+            player.sendMessage(ChatColor.GREEN+"Specify a Value!");
+            return true;
+        }
     }
 
     private boolean checkUserProfession(Player player, String name) {
