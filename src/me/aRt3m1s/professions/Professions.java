@@ -94,27 +94,32 @@ public class Professions extends JavaPlugin{
                         }else{
                             if(!this.isProfExists(player, args[1])){
                                 return noProfExists(player);
-                            }
-                            if(args.length==3){
-                                if(!this.isGroupInProfession(player, args)){
-                                    player.sendMessage(ChatColor.GREEN + "Group has no/different Profession!");
-                                    return true;
+                            }else{
+                                if(args.length==2){
+                                    return this.twoArg(player, args[1]);
                                 }
-                                if(!canUserJoinGroup(player, args)){
-                                    player.sendMessage(ChatColor.GREEN + "Unable to join group");
-                                    return true;
-                                }else{
-                                    String rGname = getOrigGroupName(args[2]);
-                                    pm.getUser(player).addGroup(rGname, player.getWorld().getName());
-                                    history.setProperty(player.getWorld().getName() + "." + player.getName() + "." + args[2] + ".lastjoin", System.currentTimeMillis());
-                                    history.save();
-                                    if(this.isIConomyEnabled()){
-                                        double joinCost = settings.getDouble(player.getWorld().getName() + ".professions." + args[1] + ".join-cost", 0.0);
-                                        Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
-                                        balance.subtract(joinCost);
-                                        player.sendMessage(ChatColor.GREEN + Double.toString(joinCost) + " is subtracted from your holdings");
+                                if(args.length==3){
+                                    if(!this.isGroupInProfession(player, args)){
+                                        player.sendMessage(ChatColor.GREEN + "Group has no/different Profession!");
+                                        return true;
                                     }
-                                    player.sendMessage(ChatColor.GREEN + "Joined Successfully");
+                                    if(!canUserJoinGroup(player, args)){
+                                        player.sendMessage(ChatColor.GREEN + "Unable to join group");
+                                        return true;
+                                    }else{
+                                        String rGname = getOrigGroupName(args[2]);
+                                        pm.getUser(player).addGroup(rGname, player.getWorld().getName());
+                                        history.setProperty(player.getWorld().getName() + "." + player.getName() + "." + rGname + ".lastjoin", System.currentTimeMillis());
+                                        history.save();
+                                        if(this.isIConomyEnabled()){
+                                            double joinCost = settings.getDouble(player.getWorld().getName() + ".professions." + args[1] + ".join-cost", 0.0);
+                                            Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
+                                            balance.subtract(joinCost);
+                                            player.sendMessage(ChatColor.GREEN + Double.toString(joinCost) + " is subtracted from your holdings");
+                                        }
+                                        player.sendMessage(ChatColor.GREEN + "Joined Successfully");
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -156,6 +161,12 @@ public class Professions extends JavaPlugin{
             return true;
         }
         return false;
+    }
+
+    private boolean twoArg(Player player, String prof) {
+        player.sendMessage(ChatColor.GREEN+"Empty Parameters!");
+        player.sendMessage(ChatColor.GREEN+"Type '/p list "+prof+"' for Available Groups!");
+        return true;
     }
 
     private boolean isIConomyEnabled() {
@@ -203,6 +214,9 @@ public class Professions extends JavaPlugin{
         String[] usersGroups = pm.getUser(player).getGroupsNames(player.getWorld().getName());
         String requirements = pm.getGroup(group).getOwnOption("profession-requirement", player.getWorld().getName());
         String[] reqSplit = requirements.split(",");
+        if(requirements.isEmpty()){
+            return true;
+        }
         for(String rS: reqSplit){
             String[] rSS = rS.split("&");
             for(String g: rSS){
@@ -211,9 +225,10 @@ public class Professions extends JavaPlugin{
                     if(usersGroups[counter].equalsIgnoreCase(g)){
                         userHasRequirement = true;
                         break;
+                    }else{
+                        userHasRequirement = false;
+                        counter++;
                     }
-                    userHasRequirement = false;
-                    counter++;
                 }
                 if(!userHasRequirement){
                     break;
