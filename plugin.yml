@@ -6,7 +6,6 @@ description: Simplified Advance Group Selection Plugin
 commands:
   professions:
     description: general profession commands
-    permissions: professions.cmds.all
     aliases: [p,prof,prs]
     usage: |
       §bCommand: §a/professions <parameters> [args...]
@@ -20,7 +19,6 @@ commands:
       §4 /p help or /p ? - displays this.§f
   settings:
     description: configures settings.yml
-    permissions: professions.settings
     aliases: [s,sett]
     usage: |
       §bCommand: §a/settings <parameters> [args...]
@@ -30,52 +28,4 @@ commands:
       §bExample: §a/s time faction 0 §f- sets time limit to faction.
       §bExample: §a/s joincost faction 60 §f- sets join cost to faction.
       §bExample: §a/s leavecost faction 120 §f- sets leave cost to faction.
-      §bExample: §a/s iConomyEnable true §f- enables iConomy, use false to disable.
-      §4 /p help §for §4/p ? - displays this.§f
-permissions:
-  professions.cmds.all:
-    description: Enables use of all Professions commands.
-    children:
-      professions.cmds.join: true
-      professions.cmds.leave: true
-      professions.cmds.list: true
-      professions.cmds.me: true
-      professions.cmds.user: true
-      professions.cmds.reload: true
-  professions.cmds.basic:
-    description: Enables use of join, leave, list, and me Professions commands.
-    default: true
-    children:
-      professions.cmds.join: true
-      professions.cmds.leave: true
-      professions.cmds.list: true
-      professions.cmds.me: true
-  professions.cmds.advance:
-    description: Enables use of join, leave, list, me, and user Professions commands.
-    children:
-      professions.cmds.join: true
-      professions.cmds.leave: true
-      professions.cmds.list: true
-      professions.cmds.me: true
-      professions.cmds.user: true
-  professions.cmds.join:
-    description: Allows use of Professions join command
-    default: true
-  professions.cmds.leave:
-    description: Allows use of Professions leave command
-    default: true
-  professions.cmds.list:
-    description: Allows use of Professions list command
-    default: true
-  professions.cmds.me:
-    description: Allows use of Professions me command
-    default: true
-  professions.cmds.user:
-    description: Allows use of Professions user command
-    default: op
-  professions.cmds.reload:
-    description: Allows use of Professions reload command
-    default: op
-  professions.settings:
-    description: Allows adding and manipulating settings.yml
-    default: op
+      §4 /s help or /s ? - displays this.§f
