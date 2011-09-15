@@ -312,6 +312,10 @@ public class Professions extends JavaPlugin{
                             }
 
                         }
+                    }else if(args[0].equalsIgnoreCase("reload")){
+                        settings.load();
+                        history.load();
+                        return true;
                     }else if(args[0].equalsIgnoreCase("help")||args[0].equalsIgnoreCase("?")){
                         return false;
                     }
