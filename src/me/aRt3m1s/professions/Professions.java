@@ -109,7 +109,7 @@ public class Professions extends JavaPlugin{
                                     }else{
                                         String rGname = getOrigGroupName(args[2]);
                                         pm.getUser(player).addGroup(rGname, player.getWorld().getName());
-                                        history.setProperty(player.getWorld().getName() + "." + player.getName() + "." + rGname + ".lastjoin", System.currentTimeMillis());
+                                        history.setProperty(player.getWorld().getName() + "." + player.getName() + "." + rGname + ".last-join", System.currentTimeMillis());
                                         history.save();
                                         if(this.isIConomyEnabled()){
                                             double joinCost = settings.getDouble(player.getWorld().getName() + ".professions." + args[1] + ".join-cost", 0.0);
@@ -129,11 +129,32 @@ public class Professions extends JavaPlugin{
                         }else{
                             if(!this.isProfExists(player, args[1])){
                                 return noProfExists(player);
-                            }
-                            if(args.length==3){
-                                if(!this.isGroupInProfession(player, args)){
-                                    player.sendMessage(ChatColor.GREEN + "Group has no/different Profession!");
-                                    return true;
+                            }else{
+                                if(args.length==2){
+                                    return this.twoArg(player, args[1]);
+                                }
+                                if(args.length==3){
+                                    if(!this.isGroupInProfession(player, args)){
+                                        player.sendMessage(ChatColor.GREEN + "Group has no/different Profession!");
+                                        return true;
+                                    }
+                                    if(!canUserLeaveGroup(player, args)){
+                                        player.sendMessage(ChatColor.GREEN+"Unable to leave group!");
+                                        return true;
+                                    }else{
+                                        String rGname = getOrigGroupName(args[2]);
+                                        pm.getUser(player).removeGroup(rGname);
+                                        history.setProperty(player.getWorld().getName() + "." + player.getName() + "." + rGname + ".last-join", 0);
+                                        history.save();
+                                        if(this.isIConomyEnabled()){
+                                            double leaveCost = settings.getDouble(player.getWorld().getName() + ".professions." + args[1] + ".leave-cost", 0.0);
+                                            Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
+                                            balance.subtract(leaveCost);
+                                            player.sendMessage(ChatColor.GREEN + Double.toString(leaveCost) + " is subtracted from your holdings");
+                                        }
+                                        player.sendMessage(ChatColor.GREEN + "Leaved Successfully");
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -161,6 +182,24 @@ public class Professions extends JavaPlugin{
             return true;
         }
         return false;
+    }
+
+    private boolean canUserLeaveGroup(Player player, String[] args) {
+        String rGname = this.getOrigGroupName(args[2]);
+        int time = settings.getInt(player.getWorld().getName()+".professions."+args[1]+".time", 1);
+        long lastJoin = Long.parseLong(history.getString(player.getWorld().getName()+"."+player.getName()+"."+
+                rGname+".last-join", "0"));
+        if(pm.getUser(player).inGroup(rGname, player.getWorld().getName())){
+            if(((time*3600000)+lastJoin)<System.currentTimeMillis()){
+                return true;
+            }else{
+                player.sendMessage(ChatColor.GREEN+"Time is not up yet!");
+                return false;
+            }
+        }else{
+            player.sendMessage(ChatColor.GREEN+"You are not in that group!");
+            return false;
+        }
     }
 
     private boolean twoArg(Player player, String prof) {
