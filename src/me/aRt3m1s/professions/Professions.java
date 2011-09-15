@@ -79,6 +79,7 @@ public class Professions extends JavaPlugin{
             }
         }
     }
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         if(sender instanceof Player){
             Player player = (Player) sender;
@@ -191,21 +192,9 @@ public class Professions extends JavaPlugin{
                             return true;
                         }
                     }else if(args[0].equalsIgnoreCase("me")){
-                        PermissionGroup[] usersGroups = pm.getUser(player).getGroups(player.getWorld().getName());
-                        int counter = 0;
-                        player.sendMessage((ChatColor.RED+"GROUP")+(ChatColor.WHITE+"<==>")+(ChatColor.RED+"PROFESSION"));
-                        while(counter<usersGroups.length){
-                            String group = usersGroups[counter].getName();
-                            String prof = usersGroups[counter].getOwnOption("profession");
-                            if(prof.isEmpty()){
-                                prof = "NoProfessionS";
-                            }
-                            player.sendMessage((ChatColor.GREEN+group)+(ChatColor.WHITE+"<==>")+(ChatColor.GREEN+prof));
-                            counter++;
-                        }
-                        return true;
+                        return checkUserProfession(player, player.getName());
                     }else if(args[0].equalsIgnoreCase("user")){
-
+                        return checkUserProfession(player, args[1]);
                     }else if((args[0].equalsIgnoreCase("help"))||(args[0].equalsIgnoreCase("?"))){
                         return false;
                     }else{
@@ -218,12 +207,48 @@ public class Professions extends JavaPlugin{
                     return true;
                 }
             }else if(cmd.getName().equalsIgnoreCase("settings")){
+                if(args.length==0){
+                    player.sendMessage(ChatColor.GREEN+"Empty Parameters!");
+                    player.sendMessage(ChatColor.GREEN+"Params: addProfession,limit,time,joincost,leavecost");
+                    return true;
+                }else if(args.length>=1&&args.length<=3){
+                    if(args[0].equalsIgnoreCase("addProfession")){
+
+                    }else if(args[0].equalsIgnoreCase("limit")){
+
+                    }else if(args[0].equalsIgnoreCase("time")){
+
+                    }else if(args[0].equalsIgnoreCase("joincost")){
+
+                    }else if(args[0].equalsIgnoreCase("leavecost")){
+
+                    }
+                }else{
+                    player.sendMessage(ChatColor.GREEN+"Too many Parameters!");
+                    return true;
+                }
             }
         }else{
             sender.sendMessage("Consoles can not use this commands!");
             return true;
         }
         return false;
+    }
+
+    private boolean checkUserProfession(Player player, String name) {
+        PermissionGroup[] usersGroups = pm.getUser(name).getGroups(player.getWorld().getName());
+        int counter = 0;
+        player.sendMessage((ChatColor.RED+"GROUP")+(ChatColor.WHITE+"<==>")+(ChatColor.RED+"PROFESSION"));
+        while(counter<usersGroups.length){
+            String group = usersGroups[counter].getName();
+            String prof = usersGroups[counter].getOwnOption("profession");
+            if(prof.isEmpty()){
+                prof = "NoProfessionS";
+            }
+            player.sendMessage((ChatColor.GREEN+group)+(ChatColor.WHITE+"<==>")+(ChatColor.GREEN+prof));
+            counter++;
+        }
+        return true;
     }
 
     private boolean canUserLeaveGroup(Player player, String[] args) {
