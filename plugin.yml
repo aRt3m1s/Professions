@@ -28,4 +28,5 @@ commands:
       §bExample: §a/s time faction 0 §f- sets time limit to faction.
       §bExample: §a/s joincost faction 60 §f- sets join cost to faction.
       §bExample: §a/s leavecost faction 120 §f- sets leave cost to faction.
+      §bExample: §a/s reload §f- reload professions.
       §4 /s help or /s ? - displays this.§f
