@@ -207,6 +207,7 @@ public class Professions extends JavaPlugin{
                     return true;
                 }
             }else if(cmd.getName().equalsIgnoreCase("settings")){
+                if(player.hasPermission("professions.settings")||player.isOp()){
                 if(args.length==0){
                     player.sendMessage(ChatColor.GREEN+"Empty Parameters!");
                     player.sendMessage(ChatColor.GREEN+"Params: addProfession,limit,time,joincost,leavecost");
@@ -321,6 +322,10 @@ public class Professions extends JavaPlugin{
                     }
                 }else{
                     player.sendMessage(ChatColor.GREEN+"Too many Parameters!");
+                    return true;
+                }
+                }else{
+                    player.sendMessage(ChatColor.RED+"You have no permission to use that!");
                     return true;
                 }
             }
